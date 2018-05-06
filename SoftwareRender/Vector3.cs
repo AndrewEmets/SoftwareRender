@@ -1,8 +1,43 @@
 ﻿using System;
+using System.CodeDom;
 
 namespace SoftwareRender
 {
-    public struct Vector3
+    public struct Vector2
+    {
+        public float x;
+        public float y;
+
+        public Vector2(float x, float y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public struct Pixel
+    {
+        public Vector2Int coordinates;
+        public Vector2 lerpValue;
+    }
+
+    public struct Vector2Int
+    {
+        public int x, y;
+        
+        public Vector2Int(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        public static explicit operator Vector2Int(Vector3 a)
+        {
+            return new Vector2Int((int) a.x, (int) a.y);
+        }
+    }
+
+    public struct Vector3 : IEquatable<Vector3>
     {
         public float x, y, z, w;
 
@@ -44,13 +79,27 @@ namespace SoftwareRender
 
         public void Scale(Vector3 scaleVec)
         {
-            for (int i = 0; i < 4; i++)            
+            for (var i = 0; i < 4; i++)            
                 this[i] *= scaleVec[i];            
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Vector3 && Equals((Vector3) obj);
+        }
+
+        public bool Equals(Vector3 other)
+        {
+            for (var i = 0; i < 4; i++)
+            {
+                if (this[i] != other[i])
+                    return false;
+            }
+            return true;
+        }
         public override string ToString()
         {
-            return string.Format("{0};{1};{2}", x, y, z);
+            return $"{x:f2};{y:f2};{z:f2}";
         }
 
         public string ToString(string format)
@@ -76,5 +125,39 @@ namespace SoftwareRender
             return new Vector3(a.x * b, a.y * b, a.z * b);
         }
 
+        public static Vector3 Cross(Vector3 a, Vector3 b)
+        {
+            var result = new Vector3(
+                a.y*b.z - a.z*b.y,
+                a.z*b.x - a.x*b.z,
+                a.x*b.y - a.y*b.x
+                );
+            return result;
+        }
+
+        public float Magnitude()
+        {
+            return (float)Math.Sqrt(x * x + y * y + z * z);
+        }
+
+        public Vector3 Normalized()
+        {
+            var f = 1f / Magnitude();
+            var result = new Vector3(x*f,y*f,z*f);
+            return result;
+        }
+        public static Vector3 Normalize(Vector3 vector3)
+        {
+            return vector3.Normalized();
+        }
+        public static float Dot(Vector3 a, Vector3 b)
+        {
+            var result = 0f;
+            for (int i = 0; i < 3; i++)
+            {
+                result += a[i] * b[i];
+            }
+            return result;
+        }
     }
 }

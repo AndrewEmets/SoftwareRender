@@ -22,55 +22,21 @@ namespace SoftwareRender
             renderer = new Renderer(pictureBox1.Width, pictureBox1.Height);
         }
 
+        Mesh mesh;
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*
-            Vector3[] verts =
-            {
-                new Vector3(-1, -1, -1),
-                new Vector3( 1, -1, -1),
-                new Vector3(-1,  1, -1),
-                new Vector3( 1,  1, -1),
-
-                new Vector3(-1, -1,  1),
-                new Vector3( 1, -1,  1),
-                new Vector3(-1,  1,  1),
-                new Vector3( 1,  1,  1),
-            };
-
-            int[] tris =
-            {
-                0, 2, 1,  2, 3, 1,
-                0, 4, 1,  4, 5, 1,
-                4, 6, 5,  6, 7, 5
-            };*/
-
-            /*Vector3[] verts =
-            {
-                new Vector3(20,  45 , 0),
-                new Vector3(35,  20 , 0),
-                new Vector3(75,  25 , 0),
-                new Vector3(120, 50, 0),
-                new Vector3(150, 30, 0),
-            };
-
-            int[] tris =
-            {
-                0,2,1,
-                0,2,3,
-                2,3,4
-            };
-
-            var mesh = new Mesh(verts, tris);*/
-
-            var mesh = ObjDriver.LoadMeshFromFile("C:\\head.obj");
+            mesh = ObjDriver.LoadMeshFromFile("E:\\head.obj");
 
             renderer.Render(mesh);
             RenderImage();
         }
-
+        Vector3 offset = Vector3.Zero;
         private void button1_Click(object sender, EventArgs e)
-        {            
+        {
+            renderer.Render(mesh);
+            //pictureBox1.Refresh();
+            RenderImage();
         }
 
         private void RenderImage()
